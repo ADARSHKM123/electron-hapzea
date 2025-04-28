@@ -5,7 +5,6 @@ import gLogo from '../assets/google.png';
 import { FiMail, FiLock } from 'react-icons/fi';
 
 export default function Login() {
-
     const [loading, setLoading] = useState(false);
 
     const handleGoogle = async () => {

@@ -29,10 +29,14 @@
     "@electron/fuses": "^1.8.0",
     "@vitejs/plugin-react": "^4.4.1",
     "electron": "35.2.1",
+    "electron-rebuild": "^3.2.9",
     "vite": "^5.4.18"
   },
   "dependencies": {
+    "@getstation/electron-google-oauth2": "^14.0.0",
+    "dotenv": "^16.5.0",
     "electron-squirrel-startup": "^1.0.1",
+    "keytar": "^7.9.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0"
