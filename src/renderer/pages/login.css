@@ -1,0 +1,83 @@
+/* ---- reset / base ---- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  font-family: "Poppins", sans-serif;
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- layout ---- */
+.hp-login__wrapper {
+  width: 420px;
+  text-align: center;
+}
+
+.hp-login__logo {
+  height: 42px;
+  margin: 0 auto 48px;
+}
+
+/* ---- inputs ---- */
+.hp-input {
+  position: relative;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.hp-input input {
+  width: 100%;
+  background: #1c1c1c;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 12px 14px 12px 46px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+}
+
+.hp-input__icon {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  width: 18px;
+  height: 18px;
+  opacity: 0.65;
+  transform: translateY(-50%);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.hp-btn {
+  width: 100%;
+  background: #2196f3;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 0;
+  font-size: 15px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: 8px;
+}
+.hp-btn:hover { background: #0e7ad9; }
+
+/* ---- divider ---- */
+.hp-divider {
+  margin: 34px auto 0;
+  width: 50%;
+  height: 1px;
+  background: #545454;
+}
+
+/* ---- Google button ---- */
+.hp-google {
+  background: transparent;
+  border: none;
+  margin-top: 24px;
+  cursor: pointer;
+}
+.hp-google img { height: 34px; }
