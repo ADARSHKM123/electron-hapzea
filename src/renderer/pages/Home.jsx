@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function Home({ token }) {
     return (
       <div style={{ color: '#fff', padding: 32 }}>

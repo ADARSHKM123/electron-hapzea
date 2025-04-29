@@ -4,22 +4,23 @@ import logo from '../assets/logo512.png';
 import gLogo from '../assets/google.png';
 import { FiMail, FiLock } from 'react-icons/fi';
 
-export default function Login() {
+export default function Login({ onSuccess }) {
     const [loading, setLoading] = useState(false);
-
+  
     const handleGoogle = async () => {
-        setLoading(true);
-        try {
-            const tokens = await window.electronAPI.loginWithGoogle();
-            // tokens.access_token is what you need to call Google APIs
-            onSuccess(tokens);
-        } catch (err) {
-            alert('Google sign-in failed: ' + err.message);
-        } finally {
-            setLoading(false);
-        }
+      if (loading) return;
+      setLoading(true);
+      try {
+        const tokens = await window.electronAPI.loginWithGoogle({ port: 0 });
+        console.log('$$$$$$$$$$$$$$$$$$', tokens);
+        
+        onSuccess(tokens);        // now onSuccess is the function you passed
+      } catch (e) {
+        alert('Google sign-in failed: ' + e.message);
+      } finally {
+        setLoading(false);
+      }
     };
-
 
     return (
         <div className="hp-login__wrapper">

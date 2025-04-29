@@ -9,7 +9,7 @@ export default defineConfig({
         'electron',
         'keytar',
         '@getstation/electron-google-oauth2',
-        'dotenv'              
+       'dotenv'            
       ]
     }
   }
