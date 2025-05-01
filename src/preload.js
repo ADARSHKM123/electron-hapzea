@@ -1,8 +1,13 @@
-// See the Electron documentation for details on how to use preload scripts:
-// https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
-// src/preload.js
 const { contextBridge, ipcRenderer } = require('electron');
 
+// Expose protected methods that allow the renderer process to use
+// the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld('electronAPI', {
-  loginWithGoogle: () => ipcRenderer.invoke('oauth:login')
+  // Google OAuth methods
+  login: () => ipcRenderer.invoke('oauth:login'),
+  refreshToken: () => ipcRenderer.invoke('oauth:refresh'),
+  
+  // You can add more methods here as needed
 });
+
+console.log('Preload script loaded');
