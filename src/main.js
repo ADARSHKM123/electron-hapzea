@@ -1,7 +1,16 @@
 const path = require('path');
 const { app, BrowserWindow, ipcMain } = require('electron');
-const Keytar = require('keytar');
 const ElectronGoogleOAuth2 = require('@getstation/electron-google-oauth2').default;
+
+// Try to use keytar, fall back to our secure storage implementation if it fails
+let storageModule;
+try {
+  storageModule = require('keytar');
+  console.log('Using keytar for secure storage');
+} catch (error) {
+  console.warn('Keytar not available, using fallback secure storage:', error.message);
+  storageModule = require('./secureStorage');
+}
 
 // Tell dotenv to look in the working directory (your project root)
 require('dotenv').config({
@@ -30,7 +39,7 @@ ipcMain.handle('oauth:login', async () => {
     // port:0 → ephemeral free port
     const tokens = await oauth.openAuthWindowAndGetTokens({ port: 0 });
     if (tokens.refresh_token) {
-      await Keytar.setPassword(SERVICE, ACCOUNT, tokens.refresh_token);
+      await storageModule.setPassword(SERVICE, ACCOUNT, tokens.refresh_token);
     }
     return tokens;
   } catch (err) {
@@ -41,7 +50,7 @@ ipcMain.handle('oauth:login', async () => {
 
 // 2) Optionally: handle silent refresh at startup
 ipcMain.handle('oauth:refresh', async () => {
-  const refreshToken = await Keytar.getPassword(SERVICE, ACCOUNT);
+  const refreshToken = await storageModule.getPassword(SERVICE, ACCOUNT);
   if (!refreshToken) return null;
   const oauth = new ElectronGoogleOAuth2(
     process.env.GOOGLE_CLIENT_ID,

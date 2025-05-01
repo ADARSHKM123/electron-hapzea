@@ -1,29 +1,63 @@
-// App.jsx
-import React from 'react';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
-import Login from './pages/Login';
-import Home  from './pages/Home';
+import React, { useState } from 'react';
 
-function LoginWrapper() {
-  const navigate = useNavigate();
-  const handleSuccess = (tokens) => {
-    // you might store tokens in context / state…
-    console.log('############',tokens);
-    
-    if(tokens){
-        navigate('/home');
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleLogin = async () => {
+    try {
+      setError(null);
+      const tokens = await window.electronAPI.login();
+      console.log('Login successful');
+      setIsLoggedIn(true);
+      setUserInfo({ token: tokens.access_token.substring(0, 10) + '...' });
+    } catch (err) {
+      console.error('Login failed:', err);
+      setError('Login failed: ' + err.message);
     }
   };
-  return <Login onSuccess={handleSuccess} />;
-}
 
-export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LoginWrapper />} />
-        <Route path="/home" element={<Home />} />
-      </Routes>
-    </BrowserRouter>
+    <div className="app-container">
+      <header>
+        <h1>Hapzea Desktop App</h1>
+      </header>
+      
+      <main>
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
+        )}
+        
+        {!isLoggedIn ? (
+          <div className="login-section">
+            <h2>Welcome to Hapzea</h2>
+            <p>Please log in to continue</p>
+            <button onClick={handleLogin}>
+              Login with Google
+            </button>
+          </div>
+        ) : (
+          <div className="dashboard">
+            <h2>Dashboard</h2>
+            <p>You are logged in!</p>
+            <div className="user-info">
+              <p>Access Token: {userInfo?.token}</p>
+            </div>
+            <button onClick={() => setIsLoggedIn(false)}>
+              Logout
+            </button>
+          </div>
+        )}
+      </main>
+      
+      <footer>
+        <p>© 2025 Hapzea Desktop App</p>
+      </footer>
+    </div>
   );
 }
+
+export default App;
