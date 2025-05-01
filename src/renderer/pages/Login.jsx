@@ -1,52 +1,87 @@
-import React, { useState } from 'react';
-import './login.css';
-import logo from '../assets/logo512.png';
-import gLogo from '../assets/google.png';
-import { FiMail, FiLock } from 'react-icons/fi';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default function Login({ onSuccess }) {
-    const [loading, setLoading] = useState(false);
-  
-    const handleGoogle = async () => {
-      if (loading) return;
-      setLoading(true);
-      try {
-        const tokens = await window.electronAPI.loginWithGoogle({ port: 0 });
-        console.log('$$$$$$$$$$$$$$$$$$', tokens);
+function Login() {
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  // Add subtle animation when component mounts
+  useEffect(() => {
+    const loginWrapper = document.querySelector('.hp-login__wrapper');
+    if (loginWrapper) {
+      loginWrapper.classList.add('fade-in');
+    }
+  }, []);
+
+  const handleLogin = async () => {
+    try {
+      setError(null);
+      setIsLoading(true);
+      
+      const tokens = await window.electronAPI.login();
+      console.log('Login successful');
+      
+      // Store token info in localStorage
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('token', tokens.access_token);
+      
+      // Navigate to home page on successful login
+      navigate('/home');
+    } catch (err) {
+      console.error('Login failed:', err);
+      setError('Login failed: ' + (err.message || 'Unknown error'));
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="hp-login__wrapper">
+      <div className="hp-app-title">
+        <h1>Hapzea Desktop App</h1>
+      </div>
+      
+      <div className="hp-feather-icon"></div>
+      
+      <div className="hp-login__card">
+        <h2 className="hp-login__heading">Welcome to Hapzea</h2>
+        <p className="hp-login__subheading">Sign in to continue to your dashboard</p>
         
-        onSuccess(tokens);        // now onSuccess is the function you passed
-      } catch (e) {
-        alert('Google sign-in failed: ' + e.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    return (
-        <div className="hp-login__wrapper">
-            <img src={logo} className="hp-login__logo" alt="hapzea" />
-
-            <form className="hp-login__form">
-                <div className="hp-input">
-                    <FiMail className="hp-input__icon" />
-                    <input placeholder="Username or Email" />
-                </div>
-                <div className="hp-input">
-                    <FiLock className="hp-input__icon" />
-                    <input type="password" placeholder="Password" />
-                </div>
-                <button className="hp-btn">Login</button>
-            </form>
-
-            <div className="hp-divider" />
-
-            <button className="hp-google"
-                onClick={handleGoogle}
-                disabled={loading}
-                title="Sign in with Google">
-                {loading ? 'Loading…' : <img src={gLogo} alt="Google" />}
-
-            </button>
+        {error && (
+          <div className="hp-error-message">
+            <span>{error}</span>
+          </div>
+        )}
+        
+        <button 
+          className={`hp-google-btn ${isLoading ? 'loading' : ''}`} 
+          onClick={handleLogin}
+          disabled={isLoading}
+        >
+          <div className="hp-btn-content">
+            <div className="hp-google-icon"></div>
+            <span>{isLoading ? 'Connecting...' : 'Continue with Google'}</span>
+          </div>
+          <div className="hp-loading-spinner"></div>
+        </button>
+        
+        <div className="hp-login__divider">
+          <span>Secure login</span>
         </div>
-    );
+        
+        <p className="hp-login__privacy">
+          By signing in, you agree to our{' '}
+          <a href="#" className="hp-link">Terms of Service</a>
+          {' '}and{' '}
+          <a href="#" className="hp-link">Privacy Policy</a>
+        </p>
+      </div>
+      
+      <div className="hp-login__footer">
+        <p>© 2025 Hapzea Desktop App</p>
+      </div>
+    </div>
+  );
 }
+
+export default Login;
