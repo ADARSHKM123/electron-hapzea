@@ -38,9 +38,21 @@ ipcMain.handle('oauth:login', async () => {
   try {
     // port:0 → ephemeral free port
     const tokens = await oauth.openAuthWindowAndGetTokens({ port: 0 });
+    
+    // Log token information (do not log in production)
+    console.log('OAuth login successful');
+    console.log('Token info received:', {
+      access_token: tokens.access_token ? `${tokens.access_token.substring(0, 10)}...` : null,
+      id_token: tokens.id_token ? `${tokens.id_token.substring(0, 10)}...` : null,
+      refresh_token: tokens.refresh_token ? 'Present' : 'Not present',
+      expires_in: tokens.expires_in || 'Not specified'
+    });
+    
     if (tokens.refresh_token) {
       await storageModule.setPassword(SERVICE, ACCOUNT, tokens.refresh_token);
+      console.log('Refresh token saved to secure storage');
     }
+    
     return tokens;
   } catch (err) {
     console.error('OAuth server error', err);

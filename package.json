@@ -105,6 +105,7 @@
   },
   "dependencies": {
     "@getstation/electron-google-oauth2": "^14.0.0",
+    "axios": "^1.9.0",
     "dotenv": "^16.5.0",
     "electron-squirrel-startup": "^1.0.1",
     "keytar": "^7.9.0",
